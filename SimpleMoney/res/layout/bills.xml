@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+	android:layout_width="fill_parent" 
+	android:layout_height="fill_parent"
+	android:orientation="vertical">
+
+	<RelativeLayout
+		android:id="@+id/topRow"
+		android:layout_width="wrap_content" 
+		android:layout_height="wrap_content"
+		android:gravity="center_horizontal">
+		
+		<Button 
+			android:id="@+id/refresh"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Refresh"
+			android:onClick="updateView"/>
+
+		<TextView
+			android:id="@+id/back"
+			android:clickable="true"
+    		android:layout_width="wrap_content"
+    		android:layout_height="wrap_content"
+    		android:layout_alignParentRight="true"
+    		android:layout_centerVertical="true"
+    		android:text="@string/back"
+			android:textColorLink="#FFFFFF"
+			android:onClick="goToRootView"/>
+			
+	</RelativeLayout>
+
+	<LinearLayout 
+		android:layout_width="fill_parent" 
+		android:layout_height="wrap_content"
+		android:layout_below="@id/topRow"
+		android:stretchColumns="1" 
+		android:scrollbars="vertical" 
+		android:isScrollContainer="true" 
+		android:scrollbarAlwaysDrawVerticalTrack="true"> 
+	
+		<ScrollView 
+			android:id="@+id/scroll" 
+			android:layout_width="fill_parent" 
+			android:layout_height="wrap_content" 
+			android:scrollbars="none"> 
+		
+			<RelativeLayout
+				android:id="@+id/lists"
+				android:layout_width="fill_parent" 
+				android:layout_height="wrap_content" 
+				android:onClick="updateView"
+				android:orientation="vertical">
+		
+				<LinearLayout
+					android:id="@+id/unpaidBills"
+					android:layout_width="fill_parent" 
+					android:layout_height="wrap_content"
+					android:orientation="vertical">
+				</LinearLayout>
+		
+				<LinearLayout
+					android:id="@+id/paidBills"
+					android:layout_width="fill_parent" 
+					android:layout_height="wrap_content" 
+					android:layout_below="@id/unpaidBills"
+					android:orientation="vertical">
+				</LinearLayout>
+				
+			</RelativeLayout>
+		</ScrollView> 		
+	</LinearLayout> 
+</RelativeLayout>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/sendMoneyView"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+	<LinearLayout
+		android:id="@+id/topRow"
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:gravity="center">
+    	
+    	<Button
+			android:id="@+id/back"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:layout_gravity="left"
+        	android:text="Back"
+			android:onClick="goToRootView"/>
+    	
+		<TextView
+			android:id="@+id/title"
+			android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:textSize="20sp"
+        	android:text="Send Money"/>
+	
+		<Button
+			android:id="@+id/clear"
+			android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:layout_gravity="right"
+        	android:text="Clear"
+        	android:onClick="clearFields"/>
+        
+    </LinearLayout>
+	
+	<TextView
+		android:id="@+id/emailText"
+		android:layout_below="@id/topRow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20px"
+		android:text="Recipient Email"/>
+		
+	<EditText
+        android:id="@+id/email"
+        android:layout_below="@id/emailText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="1"/>
+	
+	<TextView
+		android:id="@+id/amountText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/email"
+		android:text="Amount"/>
+
+	<EditText
+        android:id="@+id/amount"
+        android:layout_below="@id/amountText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="1"/>
+
+	<TextView
+		android:id="@+id/descriptionText"
+		android:layout_below="@id/amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+		android:text="Description"/>
+		
+	<EditText
+        android:id="@+id/description"
+        android:layout_below="@id/descriptionText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+        
+		
+	<Button 
+		android:id="@+id/ok"
+		android:layout_below="@id/description"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="20px"
+		android:text="Send Money"
+		android:onClick="sendMoney"/>
+
+</RelativeLayout>

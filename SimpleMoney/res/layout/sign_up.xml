@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/signUpView"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+	<TextView
+		android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
+		android:text="Create Your Account"
+		android:textSize="24sp"/>
+		
+	<ImageView
+		android:id="@+id/photo"
+    	android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+    	android:layout_below="@id/title"
+    	android:src="@drawable/qr_marker"/>
+    
+	<Button
+		android:id="@+id/getPhoto" 
+		android:layout_width="wrap_content"
+       	android:layout_height="wrap_content"
+       	android:layout_toRightOf="@id/photo"
+       	android:layout_below="@id/title"
+       	android:gravity="left|center"
+       	android:text="Take a Photo"
+       	android:textColor="#FFFFFF"
+       	android:onClick="getPhotoFromPhone"/>
+	
+	<Button
+		android:id="@+id/getLibrary" 
+		android:layout_width="wrap_content"
+       	android:layout_height="wrap_content"
+       	android:layout_toRightOf="@id/photo"
+       	android:layout_below="@id/getPhoto"
+       	android:gravity="left|center"
+       	android:text="Choose From Library"
+       	android:textColor="#FFFFFF"
+       	android:onClick="getPhotoFromLibrary"/>
+
+	<TextView
+		android:id="@+id/nameText"
+		android:layout_below="@id/getLibrary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+		android:text="Name"/>
+		
+	<EditText
+        android:id="@+id/name"
+        android:layout_below="@id/nameText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="1"/>
+
+	<TextView
+		android:id="@+id/emailText"
+		android:layout_below="@id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+		android:text="E-mail"/>
+
+	<EditText
+        android:id="@+id/email"
+        android:layout_below="@id/emailText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="1"/>
+        
+    <TextView
+		android:id="@+id/passwordText"
+		android:layout_below="@id/email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+		android:text="Password"/>
+
+	<EditText
+        android:id="@+id/password"
+        android:layout_below="@id/passwordText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="1"/>
+		
+	<Button 
+		android:id="@+id/ok"
+		android:layout_below="@id/password"
+		android:layout_alignRight="@id/email"
+		android:gravity="center"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Sign Up"
+		android:onClick="signUp"/>
+		
+	<Button
+		android:id="@+id/back"
+		android:layout_below="@id/password"
+		android:layout_alignLeft="@id/email"
+		android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cancel"
+		android:onClick="goToHomeView"/>
+
+</RelativeLayout>

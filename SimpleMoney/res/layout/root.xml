@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" 
+    android:gravity="center">
+    
+    	<Button
+			android:id="@+id/back"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:text="Sign Out"
+        	android:padding="10px"
+        	android:layout_alignParentRight="true"
+			android:onClick="goToLoginView"/>
+    
+		<TextView 
+			android:id="@+id/title"
+			android:textSize="20sp"
+			android:layout_centerInParent="true"
+			android:layout_toLeftOf="@id/back"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:padding="10px"
+			android:text="SimpleMoney" />
+
+	<TextView 
+		android:id="@+id/userData"
+		android:lineSpacingMultiplier="1.5"
+		android:textSize="20px"
+		android:padding="10px"
+		android:layout_below="@id/title"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="User data" />
+
+	<TableLayout
+		android:id="@+id/icons"
+		android:layout_height="fill_parent"
+		android:layout_width="wrap_content"
+		android:layout_marginTop="70px">
+			
+		<TableRow>
+		<Button
+    	    android:id="@+id/quickPay"
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:text="QuickPay"
+    	    android:textColor="#FFFFFF"
+    	    android:drawableTop="@drawable/qr_marker"
+    	    android:onClick="goToQuickPayView" />
+        <Button
+    	    android:id="@+id/sendMoney"
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:text="Send Money"
+    	    android:textColor="#FFFFFF"
+    	    android:drawableTop="@drawable/send_money2"
+    	    android:onClick="goToSendMoneyView" /> 
+    	</TableRow>
+    	    
+    	<TableRow>
+    	<Button
+    	    android:id="@+id/requestMoney"
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:text="Request Money"
+    	    android:textColor="#FFFFFF"
+    	    android:drawableTop="@drawable/history"
+    	    android:onClick="goToRequestMoneyView" />  
+    	<Button
+    	    android:id="@+id/pendingTransactions"
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:text="Transactions"
+    	    android:textColor="#FFFFFF"
+    	    android:drawableTop="@drawable/pending_transactions"
+    	    android:onClick="goToPendingTransactionsView" />   	  
+    	</TableRow>
+    	 
+        <Button
+    	    android:id="@+id/localAds"
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:text="Local Deals"
+    	    android:textColor="#FFFFFF"
+    	    android:drawableTop="@drawable/local_deals"
+    	    android:onClick="goToLocalAdsView" />
+		
+	</TableLayout>
+
+</LinearLayout>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/loginView"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center_horizontal|center"
+    android:orientation="vertical">
+
+	<TextView
+		android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
+        android:gravity="fill"
+		android:text="Sign In to SimpleMoney"
+		android:textSize="24sp"/>
+
+	<TextView
+		android:id="@+id/usernameText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+		android:text="Username"/>
+
+	<EditText
+        android:id="@+id/username"
+        android:layout_below="@id/usernameText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+		android:text="np78@nau.edu"/>
+		
+	<TextView
+		android:id="@+id/passwordText"
+		android:layout_below="@id/username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+		android:text="Password"/>
+		
+	<EditText
+        android:id="@+id/password"
+        android:layout_below="@id/passwordText"
+        android:password="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+		android:text="Maddie1"/>
+
+	<Button 
+		android:id="@+id/ok"
+		android:layout_below="@id/password"
+		android:layout_alignRight="@id/password"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Sign In"
+		android:onClick="goToRootView"/>
+		
+	<Button
+		android:id="@+id/back"
+		android:layout_below="@id/password"
+		android:layout_alignLeft="@id/password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cancel"
+		android:onClick="goToHomeView"/>
+
+</RelativeLayout>
