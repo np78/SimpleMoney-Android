@@ -116,8 +116,10 @@ public class SendMoney extends Activity{
     		m.put("sender_email", user.getEmail());
     		m.put("recipient_email", email);
     		m.put("description", description);
-    		m.put("amount", amount);
-    		json.put("user", m);
+    		Double d = new Double(amount);
+    		d *= 100;
+    		m.put("amount", "" + d.intValue());
+    		json.put("transaction", m);
     		
     		StringEntity se = new StringEntity(json.toString());
     		post.setEntity(se);

@@ -6,6 +6,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -108,7 +109,7 @@ public class RequestMoney extends Activity{
     	try
     	{
     		URI uri = new URI("http://severe-leaf-6733.herokuapp.com/invoices");
-    		HttpClient client = new DefaultHttpClient();
+    		DefaultHttpClient client = Global.client;
     		HttpPost post = new HttpPost(uri);
     		
     		JSONObject json = new JSONObject();
@@ -116,15 +117,22 @@ public class RequestMoney extends Activity{
     		m.put("sender_email", user.getEmail());
     		m.put("recipient_email", email);
     		m.put("description", description);
-    		m.put("amount", amount);
-    		json.put("user", m);
+    		Double d = new Double(amount);
+    		d *= 100;
+    		m.put("amount", "" + d.intValue());
+    		json.put("transaction", m);
+    		Toast.makeText(this, "1", Toast.LENGTH_SHORT).show();
     		
     		StringEntity se = new StringEntity(json.toString());
     		post.setEntity(se);
     		post.setHeader("Accept", "application/json");
     		post.setHeader("Content-type", "application/json");
     		BasicResponseHandler responseHandler = new BasicResponseHandler();
-    		String responseString = client.execute(post, responseHandler);
+    		Toast.makeText(this, "2", Toast.LENGTH_SHORT).show();
+    		//Fails here
+			Log.e("Local Context2", Global.localContext.getAttribute(ClientContext.COOKIE_STORE).toString());
+    		String responseString = client.execute(post, responseHandler, Global.localContext);
+    		Toast.makeText(this, "3", Toast.LENGTH_SHORT).show();
     		
     		if(responseString != null)
     		{

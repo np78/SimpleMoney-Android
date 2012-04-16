@@ -57,7 +57,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/email"
-		android:text="Amount"/>
+		android:text="Amount (no $ signs)"/>
 
 	<EditText
         android:id="@+id/amount"

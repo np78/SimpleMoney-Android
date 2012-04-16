@@ -3,19 +3,25 @@ package com.hermes;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.protocol.ClientContext;
+import org.apache.http.cookie.Cookie;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
+import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HTTP;
+import org.apache.http.protocol.HttpContext;
 import org.json.JSONObject;
 
 import com.google.gson.Gson;
@@ -28,6 +34,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.webkit.CookieManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -63,7 +70,7 @@ public class Login extends Activity {
     	{
     		//Working server connection
     		URI uri = new URI("http://severe-leaf-6733.herokuapp.com/users/sign_in");
-    		HttpClient client = new DefaultHttpClient();
+    		DefaultHttpClient client = new DefaultHttpClient();
     		HttpPost post = new HttpPost(uri);
     		
     		JSONObject json = new JSONObject();
@@ -87,6 +94,13 @@ public class Login extends Activity {
     		
     		if(um.getID() != 0)
     		{
+    			CookieStore cookieStore = client.getCookieStore();
+    			HttpContext localContext = new BasicHttpContext(); 
+    			localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
+    			Log.e("Local Context1", localContext.getAttribute(ClientContext.COOKIE_STORE).toString());
+    			Global.localContext = localContext;
+    			Global.client = client;
+    			
             	Intent myIntent = new Intent(getApplicationContext(), Root.class);
             	myIntent.putExtra("User_ID", um.getID());
                 startActivity(myIntent);
