@@ -32,7 +32,7 @@ import android.widget.Toast;
 public class SignUp extends Activity{
 	
 	private int width, height;	
-	public UserModel user;
+	public User user;
 	
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,7 +114,7 @@ public class SignUp extends Activity{
     		GsonBuilder g = new GsonBuilder();
     		g.setDateFormat("E MMM d HH:mm:ss Z y");
     		Gson gson = g.create();
-    		UserModel um = gson.fromJson(responseString, UserModel.class);
+    		User um = gson.fromJson(responseString, User.class);
     		
     		if(um.getID() != 0)
     		{

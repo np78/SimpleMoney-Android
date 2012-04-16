@@ -33,7 +33,7 @@ import android.widget.Toast;
 
 public class Login extends Activity {
 	private int width, height;	
-	public UserModel user;
+	public User user;
 	
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,12 +78,11 @@ public class Login extends Activity {
     		post.setHeader("Content-type", "application/json");
     		BasicResponseHandler responseHandler = new BasicResponseHandler();
     		String responseString = client.execute(post, responseHandler);
-    		Log.v("Response", responseString);
     		
     		GsonBuilder g = new GsonBuilder();
     		g.setDateFormat("E MMM d HH:mm:ss Z y");
     		Gson gson = g.create();
-    		UserModel um = gson.fromJson(responseString, UserModel.class);
+    		User um = gson.fromJson(responseString, User.class);
     		//Log.v("1Trans Response", t[0].getAmount());
     		
     		if(um.getID() != 0)

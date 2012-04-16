@@ -30,7 +30,7 @@ import android.widget.Toast;
 public class SendMoney extends Activity{
 	
 	private int width, height, user_id;
-	private UserModel user;
+	private User user;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		user_id = getIntent().getExtras().getInt("User_ID");
@@ -55,7 +55,7 @@ public class SendMoney extends Activity{
     	des.setHeight((int)(height/25));
     }
 	
-	public UserModel getUserData()
+	public User getUserData()
 	{
 		try
 		{
@@ -71,7 +71,7 @@ public class SendMoney extends Activity{
 			GsonBuilder g = new GsonBuilder();
 			g.setDateFormat("E MMM d HH:mm:ss Z y");
 			Gson gson = g.create();
-			UserModel um = gson.fromJson(responseString, UserModel.class);
+			User um = gson.fromJson(responseString, User.class);
 			return um;
 		}
 		catch (Exception e) {}

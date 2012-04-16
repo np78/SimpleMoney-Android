@@ -37,7 +37,7 @@ import android.widget.Toast;
 public class Root extends Activity{
 	
 	int width, height, user_id;
-	private UserModel user;
+	private User user;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		user_id = getIntent().getExtras().getInt("User_ID");
@@ -57,9 +57,9 @@ public class Root extends Activity{
         userData.setText(user.getName() + "   (" + user.getEmail() + ")\n");
         userData.append("Balance: " + user.getBalance());
         try {
-        	//Toast.makeText(this, user.getAvatarURLSmall(), Toast.LENGTH_LONG).show();  
+        	//Toast.makeText(this, user.getAvatarURL(), Toast.LENGTH_LONG).show();  
         	//Log.v("Avatar URL", user.getAvatarURL());
-        	//userData.setCompoundDrawables(grabImageFromUrl(user.getAvatarURL()), null, null, null);
+        	userData.setCompoundDrawables(grabImageFromUrl(user.getAvatarURL()), null, null, null);
 		} catch (Exception e) {}
         userData.setBackgroundResource(R.layout.box);
         
@@ -91,10 +91,10 @@ public class Root extends Activity{
 	private Drawable grabImageFromUrl(String url) throws Exception {
 		if(url.equals(""))
 			url = "http://severe-leaf-6733.herokuapp.com/images/medium/missing.png";
-	    return Drawable.createFromStream((InputStream)new URL(url).getContent(), "src");
+	    return Drawable.createFromStream((InputStream)new URL("http://severe-leaf-6733.herokuapp.com" + url).getContent(), "src");
 	}
 	
-	public UserModel getUserData()
+	public User getUserData()
 	{
 		try
 		{
@@ -110,7 +110,7 @@ public class Root extends Activity{
 			GsonBuilder g = new GsonBuilder();
 			g.setDateFormat("E MMM d HH:mm:ss Z y");
 			Gson gson = g.create();
-			UserModel um = gson.fromJson(responseString, UserModel.class);
+			User um = gson.fromJson(responseString, User.class);
 			return um;
 		}
 		catch (Exception e) {}
@@ -149,7 +149,6 @@ public class Root extends Activity{
     		JSONObject m = new JSONObject();
     		m.put("name", user.getName());
     		m.put("email", user.getEmail());
-    		m.put("password", user.getPassword());
     		json.put("user", m);
     		
     		StringEntity se = new StringEntity(json.toString());

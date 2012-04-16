@@ -30,7 +30,7 @@ import android.widget.Toast;
 public class RequestMoney extends Activity{
 	
 	private int width, height, user_id;	
-	private UserModel user;
+	private User user;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		user_id = getIntent().getExtras().getInt("User_ID");
@@ -43,15 +43,15 @@ public class RequestMoney extends Activity{
         height = mWinMgr.getDefaultDisplay().getHeight();
         
         EditText am = (EditText) findViewById(R.id.amount);
-        am.setWidth((int)(width/1.5));
+        am.setWidth((int)(width/1.1));
     	am.setHeight((int)(height/50));
     	
     	EditText em = (EditText) findViewById(R.id.email);
-    	em.setWidth((int)(width/1.5));
+    	em.setWidth((int)(width/1.1));
     	em.setHeight((int)(height/50));
     	
     	EditText des = (EditText) findViewById(R.id.description);
-        des.setWidth((int)(width/1.5));
+        des.setWidth((int)(width/1.1));
     	des.setHeight((int)(height/25));
     }
 	
@@ -74,7 +74,7 @@ public class RequestMoney extends Activity{
     	des.setText("");
 	}
 	
-	public UserModel getUserData()
+	public User getUserData()
 	{
 		try
 		{
@@ -90,7 +90,7 @@ public class RequestMoney extends Activity{
 			GsonBuilder g = new GsonBuilder();
 			g.setDateFormat("E MMM d HH:mm:ss Z y");
 			Gson gson = g.create();
-			UserModel um = gson.fromJson(responseString, UserModel.class);
+			User um = gson.fromJson(responseString, User.class);
 			return um;
 		}
 		catch (Exception e) {}

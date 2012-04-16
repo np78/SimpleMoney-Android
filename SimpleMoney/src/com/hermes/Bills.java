@@ -38,8 +38,8 @@ import android.widget.TextView;
 public class Bills extends Activity{
 	
 	private int user_id;
-	private UserModel user;
-	private TransactionModel[] unpaidBills, paidBills;
+	private User user;
+	private Transaction[] unpaidBills, paidBills;
 	//private LinkedList<TextView> entries = new LinkedList<TextView>();
 	
 	public void onCreate(Bundle savedInstanceState) {
@@ -50,7 +50,7 @@ public class Bills extends Activity{
         updateView(null);
     }
 	
-	public UserModel getUserData()
+	public User getUserData()
 	{
 		try
 		{
@@ -66,7 +66,7 @@ public class Bills extends Activity{
 			GsonBuilder g = new GsonBuilder();
 			g.setDateFormat("E MMM d HH:mm:ss Z y");
 			Gson gson = g.create();
-			UserModel um = gson.fromJson(responseString, UserModel.class);
+			User um = gson.fromJson(responseString, User.class);
 			return um;
 		}
 		catch (Exception e) {}
@@ -76,7 +76,7 @@ public class Bills extends Activity{
 	private Drawable grabImageFromUrl(String url) throws Exception {
 		if(url.equals(""))
 			url = "http://severe-leaf-6733.herokuapp.com/images/small/missing.png";
-	    return Drawable.createFromStream((InputStream)new URL(url).getContent(), "src");
+	    return Drawable.createFromStream((InputStream)new URL("http://severe-leaf-6733.herokuapp.com" + url).getContent(), "src");
 	}
 	
 	public void getUnpaidBills()
@@ -98,12 +98,12 @@ public class Bills extends Activity{
         {
         	for(int i = 0; i < unpaidBills.length; i++)
 	        {
-	        	TransactionModel trans = unpaidBills[i];
+	        	Transaction trans = unpaidBills[i];
 	        	
 	        	TextView tv = new TextView(this);
 	        	tv.setId(trans.getID());
 	        	try {
-	    			//tv.setCompoundDrawables(grabImageFromUrl(trans.getSender().getAvatarURLSmall()), null, null, null);
+	    			tv.setCompoundDrawables(grabImageFromUrl(trans.getSender().getAvatarURLSmall()), null, null, null);
 	    		} catch (Exception e) {}
 	        	//tv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.qr_marker, 0, 0, 0);
 	        	tv.append(" " + trans.getSenderEmail() + "   (" + trans.getSenderEmail() + ")\n");
@@ -126,7 +126,7 @@ public class Bills extends Activity{
 	    		tv.append(" " + date.getMonth() + " " + date.getDay() + ", " + date.getYear() + " " +
 	    				 hours + ":" + minutes + ":" + seconds + timezone + "\n");*/
 	        	tv.append(" " + trans.getCreateDate() + "\n");
-	    		tv.append(" " + "Amount: " + trans.getAmountString());
+	    		tv.append(" " + "Amount: " + trans.getAmount());
 	    		
 	    		TextView desc = new TextView(this);
 	    		desc.setText(" " + trans.getDescription());
@@ -195,7 +195,7 @@ public class Bills extends Activity{
         {
         	for(int i = 0; i < paidBills.length; i++)
 	        {
-	        	TransactionModel trans = paidBills[i];
+	        	Transaction trans = paidBills[i];
 	        	
 	        	TextView tv = new TextView(this);
 	        	tv.setId(trans.getID());
@@ -205,7 +205,7 @@ public class Bills extends Activity{
 	        	tv.append(" " + trans.getSenderEmail() + "   (" + trans.getSenderEmail() + ")\n");
 	        	String date = trans.getCreateDate();
 	        	tv.append(" " + trans.getCreateDate() + "\n");
-	    		tv.append(" " + "Amount: " + trans.getAmountString());
+	    		tv.append(" " + "Amount: " + trans.getAmount());
 	    		
 	    		TextView desc = new TextView(this);
 	    		desc.setText(" " + trans.getDescription());
@@ -271,7 +271,7 @@ public class Bills extends Activity{
     		GsonBuilder g = new GsonBuilder();
     		g.setDateFormat("E MMM d HH:mm:ss Z y");
     		Gson gson = g.create();
-    		paidBills = gson.fromJson(responseString, TransactionModel[].class);
+    		paidBills = gson.fromJson(responseString, Transaction[].class);
     		
     		//Get unpaidBills
     		uri = new URI("http://severe-leaf-6733.herokuapp.com/users/" + user_id + "/unpaidbills");
@@ -285,7 +285,7 @@ public class Bills extends Activity{
     		g = new GsonBuilder();
     		g.setDateFormat("E MMM d HH:mm:ss Z y");
     		gson = g.create();
-    		unpaidBills = gson.fromJson(responseString, TransactionModel[].class);
+    		unpaidBills = gson.fromJson(responseString, Transaction[].class);
     		
     		getUnpaidBills();
             getPaidBills();
@@ -298,7 +298,7 @@ public class Bills extends Activity{
 	public void pay(View view)
 	{
 		String index = view.getTag().toString();
-		TransactionModel trans = unpaidBills[index.charAt(0) - 48];
+		Transaction trans = unpaidBills[index.charAt(0) - 48];
 		try
     	{
     		URI uri = new URI("http://severe-leaf-6733.herokuapp.com/invoices");

@@ -34,7 +34,7 @@
         	android:layout_gravity="right"
         	android:text="Clear"
         	android:onClick="clearFields"/>
-        
+       
     </LinearLayout>
 	
 	<TextView

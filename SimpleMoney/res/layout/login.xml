@@ -12,7 +12,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerInParent="true"
-        android:gravity="fill"
 		android:text="Sign In to SimpleMoney"
 		android:textSize="24sp"/>
 

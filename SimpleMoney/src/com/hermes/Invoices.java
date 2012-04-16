@@ -32,8 +32,8 @@ import android.widget.LinearLayout.LayoutParams;
 public class Invoices extends Activity{
 	
 	private int user_id;
-	private UserModel user;
-	private TransactionModel[] unpaidInvoices, paidInvoices;
+	private User user;
+	private Transaction[] unpaidInvoices, paidInvoices;
 	//private LinkedList<TextView> entries = new LinkedList<TextView>();
 	
 	public void onCreate(Bundle savedInstanceState) {
@@ -46,7 +46,7 @@ public class Invoices extends Activity{
 	private Drawable grabImageFromUrl(String url) throws Exception {
 		if(url.equals(""))
 			url = "http://severe-leaf-6733.herokuapp.com/images/small/missing.png";
-	    return Drawable.createFromStream((InputStream)new URL(url).getContent(), "src");
+	    return Drawable.createFromStream((InputStream)new URL("http://severe-leaf-6733.herokuapp.com" + url).getContent(), "src");
 	}
 	
 	public void getUnpaidInvoices()
@@ -68,7 +68,7 @@ public class Invoices extends Activity{
         {
         	for(int i = 0; i < unpaidInvoices.length; i++)
 	        {
-	        	TransactionModel trans = unpaidInvoices[i];
+	        	Transaction trans = unpaidInvoices[i];
 	        	
 	        	TextView tv = new TextView(this);
 	        	tv.setId(trans.getID());
@@ -78,7 +78,7 @@ public class Invoices extends Activity{
 	        	tv.append(" " + trans.getSenderEmail() + "   (" + trans.getSenderEmail() + ")\n");
 	        	String date = trans.getCreateDate();
 	        	tv.append(" " + trans.getCreateDate() + "\n");
-	    		tv.append(" " + "Amount: " + trans.getAmountString());
+	    		tv.append(" " + "Amount: " + trans.getAmount());
 	    		
 	    		TextView desc = new TextView(this);
 	    		desc.setText(" " + trans.getDescription());
@@ -147,7 +147,7 @@ public class Invoices extends Activity{
         {
         	for(int i = 0; i < paidInvoices.length; i++)
 	        {
-	        	TransactionModel trans = paidInvoices[i];
+	        	Transaction trans = paidInvoices[i];
 	        	
 	        	TextView tv = new TextView(this);
 	        	tv.setId(trans.getID());
@@ -157,7 +157,7 @@ public class Invoices extends Activity{
 	        	tv.append(" " + trans.getSenderEmail() + "   (" + trans.getSenderEmail() + ")\n");
 	        	String date = trans.getCreateDate();
 	        	tv.append(" " + trans.getCreateDate() + "\n");
-	    		tv.append(" " + "Amount: " + trans.getAmountString());
+	    		tv.append(" " + "Amount: " + trans.getAmount());
 	    		
 	    		TextView desc = new TextView(this);
 	    		desc.setText(" " + trans.getDescription());
@@ -223,7 +223,7 @@ public class Invoices extends Activity{
     		GsonBuilder g = new GsonBuilder();
     		g.setDateFormat("E MMM d HH:mm:ss Z y");
     		Gson gson = g.create();
-    		paidInvoices = gson.fromJson(responseString, TransactionModel[].class);
+    		paidInvoices = gson.fromJson(responseString, Transaction[].class);
     		
     		//Get unpaid invoices
     		uri = new URI("http://severe-leaf-6733.herokuapp.com/users/" + user_id + "/unpaidinvoices");
@@ -237,7 +237,7 @@ public class Invoices extends Activity{
     		g = new GsonBuilder();
     		g.setDateFormat("E MMM d HH:mm:ss Z y");
     		gson = g.create();
-    		unpaidInvoices = gson.fromJson(responseString, TransactionModel[].class);
+    		unpaidInvoices = gson.fromJson(responseString, Transaction[].class);
     		
     		getUnpaidInvoices();
             getPaidInvoices();
