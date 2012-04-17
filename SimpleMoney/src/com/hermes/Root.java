@@ -1,6 +1,7 @@
 package com.hermes;
 
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 
@@ -22,9 +23,12 @@ import com.google.gson.GsonBuilder;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -59,7 +63,9 @@ public class Root extends Activity{
         try {
         	//Toast.makeText(this, user.getAvatarURL(), Toast.LENGTH_LONG).show();  
         	//Log.v("Avatar URL", user.getAvatarURL());
-        	userData.setCompoundDrawables(grabImageFromUrl(user.getAvatarURL()), null, null, null);
+        	Thread t = new Thread(new Image(this, user.getAvatarURL()));
+    		t.start();
+        	//userData.setCompoundDrawables(grabImageFromUrl(user.getAvatarURL()), null, null, null);
 		} catch (Exception e) {}
         userData.setBackgroundResource(R.layout.box);
         
@@ -88,10 +94,14 @@ public class Root extends Activity{
     }
 	
 
-	private Drawable grabImageFromUrl(String url) throws Exception {
-		if(url.equals(""))
-			url = "http://severe-leaf-6733.herokuapp.com/images/medium/missing.png";
-	    return Drawable.createFromStream((InputStream)new URL("http://severe-leaf-6733.herokuapp.com" + url).getContent(), "src");
+	private Drawable grabImageFromUrl(String url) throws Exception {	 
+	    HttpURLConnection connection = (HttpURLConnection) new URL("http://severe-leaf-6733.herokuapp.com" + url).openConnection(); 
+	    connection.connect(); 
+	    InputStream input = connection.getInputStream(); 
+	 
+	    Bitmap x = BitmapFactory.decodeStream(input); 
+	    return new BitmapDrawable(x);
+	    //return Drawable.createFromStream((InputStream)new URL("http://severe-leaf-6733.herokuapp.com" + url).getContent(), "src");
 	}
 	
 	public User getUserData()

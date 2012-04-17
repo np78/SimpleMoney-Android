@@ -97,7 +97,7 @@ public class Login extends Activity {
     			CookieStore cookieStore = client.getCookieStore();
     			HttpContext localContext = new BasicHttpContext(); 
     			localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
-    			Log.e("Local Context1", localContext.getAttribute(ClientContext.COOKIE_STORE).toString());
+    			//Log.e("Local Context1", localContext.getAttribute(ClientContext.COOKIE_STORE).toString());
     			Global.localContext = localContext;
     			Global.client = client;
     			

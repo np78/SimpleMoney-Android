@@ -108,7 +108,7 @@ public class SendMoney extends Activity{
     	try
     	{
     		URI uri = new URI("http://severe-leaf-6733.herokuapp.com/transactions");
-    		HttpClient client = new DefaultHttpClient();
+    		HttpClient client = Global.client;
     		HttpPost post = new HttpPost(uri);
     		
     		JSONObject json = new JSONObject();
@@ -117,7 +117,6 @@ public class SendMoney extends Activity{
     		m.put("recipient_email", email);
     		m.put("description", description);
     		Double d = new Double(amount);
-    		d *= 100;
     		m.put("amount", "" + d.intValue());
     		json.put("transaction", m);
     		

@@ -114,11 +114,10 @@ public class RequestMoney extends Activity{
     		
     		JSONObject json = new JSONObject();
     		JSONObject m = new JSONObject();
-    		m.put("sender_email", user.getEmail());
-    		m.put("recipient_email", email);
+    		m.put("sender_email", email);
+    		m.put("recipient_email", user.getEmail());
     		m.put("description", description);
     		Double d = new Double(amount);
-    		d *= 100;
     		m.put("amount", "" + d.intValue());
     		json.put("transaction", m);
     		Toast.makeText(this, "1", Toast.LENGTH_SHORT).show();
@@ -130,7 +129,7 @@ public class RequestMoney extends Activity{
     		BasicResponseHandler responseHandler = new BasicResponseHandler();
     		Toast.makeText(this, "2", Toast.LENGTH_SHORT).show();
     		//Fails here
-			Log.e("Local Context2", Global.localContext.getAttribute(ClientContext.COOKIE_STORE).toString());
+			//Log.e("Local Context2", Global.localContext.getAttribute(ClientContext.COOKIE_STORE).toString());
     		String responseString = client.execute(post, responseHandler, Global.localContext);
     		Toast.makeText(this, "3", Toast.LENGTH_SHORT).show();
     		

@@ -74,8 +74,6 @@ public class Bills extends Activity{
 	}
 	
 	private Drawable grabImageFromUrl(String url) throws Exception {
-		if(url.equals(""))
-			url = "http://severe-leaf-6733.herokuapp.com/images/small/missing.png";
 	    return Drawable.createFromStream((InputStream)new URL("http://severe-leaf-6733.herokuapp.com" + url).getContent(), "src");
 	}
 	
@@ -139,20 +137,6 @@ public class Bills extends Activity{
 	    				pay(v);            
 	    			}         
 	    		});
-	    		
-	        	RelativeLayout.LayoutParams parameters = new RelativeLayout.LayoutParams( 
-	                    RelativeLayout.LayoutParams.WRAP_CONTENT, 
-	                    RelativeLayout.LayoutParams.WRAP_CONTENT);
-	        	tv.setPadding(5, 5, 5, 5);
-	        	tv.setLineSpacing((float)0, (float)1.5);
-	        	tv.setLayoutParams(parameters);
-	        	
-	        	RelativeLayout.LayoutParams parameters2 = new RelativeLayout.LayoutParams( 
-	                    RelativeLayout.LayoutParams.WRAP_CONTENT, 
-	                    RelativeLayout.LayoutParams.WRAP_CONTENT);
-	        	parameters2.addRule(RelativeLayout.BELOW, tv.getId());
-	        	desc.setPadding(5, 5, 5, 5);
-	        	desc.setLayoutParams(parameters2);
 	        	
 	        	RelativeLayout area = new RelativeLayout(this);
 	        	RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams( 
@@ -161,14 +145,29 @@ public class Bills extends Activity{
 	        	rlp.setMargins(0, 5, 0, 5);
 	        	area.setLayoutParams(rlp);
 	        	
+	        	RelativeLayout.LayoutParams parameters = new RelativeLayout.LayoutParams( 
+	                    RelativeLayout.LayoutParams.WRAP_CONTENT, 
+	                    RelativeLayout.LayoutParams.WRAP_CONTENT);
+	        	tv.setPadding(5, 5, 5, 5);
+	        	tv.setLineSpacing((float)0, (float)1.5);
+	        	tv.setLayoutParams(parameters);
+	        	
 	        	rlp = new RelativeLayout.LayoutParams( 
 	                    RelativeLayout.LayoutParams.WRAP_CONTENT, 
 	                    RelativeLayout.LayoutParams.WRAP_CONTENT); 
 	        	rlp.addRule(RelativeLayout.RIGHT_OF, tv.getId());
 	        	rlp.addRule(RelativeLayout.ALIGN_RIGHT, tv.getId());
+	        	pay.setLayoutParams(rlp);
+	        	
+	        	RelativeLayout.LayoutParams parameters2 = new RelativeLayout.LayoutParams( 
+	                    RelativeLayout.LayoutParams.WRAP_CONTENT, 
+	                    RelativeLayout.LayoutParams.WRAP_CONTENT);
+	        	parameters2.addRule(RelativeLayout.BELOW, tv.getId());
+	        	desc.setPadding(5, 5, 5, 5);
+	        	desc.setLayoutParams(parameters2);
 	    
 	        	area.addView(tv);
-	        	//area.addView(pay, rlp);
+	        	area.addView(pay);
 	        	area.addView(desc);
 	        	area.setBackgroundResource(R.layout.box);
 	        	list.addView(area);
@@ -185,7 +184,13 @@ public class Bills extends Activity{
         title.setText("Paid Bills");
         title.setTextSize(20);
         list.addView(title);
-        if(paidBills.length == 0)
+        boolean any = false;
+        for(int i = 0; i < paidBills.length; i++)
+        {
+        	if(paidBills[i].getComplete())
+        		any = true;
+        }
+        if(!any)
         {
         	TextView none = new TextView(this);
             none.setText("None");
@@ -197,60 +202,63 @@ public class Bills extends Activity{
 	        {
 	        	Transaction trans = paidBills[i];
 	        	
-	        	TextView tv = new TextView(this);
-	        	tv.setId(trans.getID());
-	        	try {
-	    			//tv.setCompoundDrawables(grabImageFromUrl(trans.getSender().getAvatarURLSmall()), null, null, null);
-	    		} catch (Exception e) {}
-	        	tv.append(" " + trans.getSenderEmail() + "   (" + trans.getSenderEmail() + ")\n");
-	        	String date = trans.getCreateDate();
-	        	tv.append(" " + trans.getCreateDate() + "\n");
-	    		tv.append(" " + "Amount: " + trans.getAmount());
-	    		
-	    		TextView desc = new TextView(this);
-	    		desc.setText(" " + trans.getDescription());
-	    		
-	    		Button pay = new Button(this);
-	    		pay.setText("Pay");
-	    		pay.setTag(i);
-	    		pay.setOnClickListener(new View.OnClickListener() {             
-	    			public void onClick(View v) {                 
-	    				pay(v);            
-	    			}         
-	    		});
-	    		
-	        	RelativeLayout.LayoutParams parameters = new RelativeLayout.LayoutParams( 
-	                    RelativeLayout.LayoutParams.WRAP_CONTENT, 
-	                    RelativeLayout.LayoutParams.WRAP_CONTENT);
-	        	tv.setPadding(5, 5, 5, 5);
-	        	tv.setLineSpacing((float)0, (float)1.5);
-	        	tv.setLayoutParams(parameters);
-	        	
-	        	RelativeLayout.LayoutParams parameters2 = new RelativeLayout.LayoutParams( 
-	                    RelativeLayout.LayoutParams.WRAP_CONTENT, 
-	                    RelativeLayout.LayoutParams.WRAP_CONTENT);
-	        	parameters2.addRule(RelativeLayout.BELOW, tv.getId());
-	        	desc.setPadding(5, 5, 5, 5);
-	        	desc.setLayoutParams(parameters2);
-	        	
-	        	RelativeLayout area = new RelativeLayout(this);
-	        	RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams( 
-	                    RelativeLayout.LayoutParams.FILL_PARENT, 
-	                    RelativeLayout.LayoutParams.WRAP_CONTENT);
-	        	rlp.setMargins(0, 5, 0, 5);
-	        	area.setLayoutParams(rlp);
-	        	
-	        	rlp = new RelativeLayout.LayoutParams( 
-	                    RelativeLayout.LayoutParams.WRAP_CONTENT, 
-	                    RelativeLayout.LayoutParams.WRAP_CONTENT); 
-	        	rlp.addRule(RelativeLayout.RIGHT_OF, tv.getId());
-	        	rlp.addRule(RelativeLayout.ALIGN_RIGHT, tv.getId());
-	    
-	        	area.addView(tv);
-	        	//area.addView(pay, rlp);
-	        	area.addView(desc);
-	        	area.setBackgroundResource(R.layout.box);
-	        	list.addView(area);
+	        	if(trans.getComplete())
+	        	{
+		        	TextView tv = new TextView(this);
+		        	tv.setId(trans.getID());
+		        	try {
+		    			//tv.setCompoundDrawables(grabImageFromUrl(trans.getSender().getAvatarURLSmall()), null, null, null);
+		    		} catch (Exception e) {}
+		        	tv.append(" " + trans.getSenderEmail() + "   (" + trans.getSenderEmail() + ")\n");
+		        	String date = trans.getCreateDate();
+		        	tv.append(" " + trans.getCreateDate() + "\n");
+		    		tv.append(" " + "Amount: " + trans.getAmount());
+		    		
+		    		TextView desc = new TextView(this);
+		    		desc.setText(" " + trans.getDescription());
+		    		
+		    		Button pay = new Button(this);
+		    		pay.setText("Pay");
+		    		pay.setTag(i);
+		    		pay.setOnClickListener(new View.OnClickListener() {             
+		    			public void onClick(View v) {                 
+		    				pay(v);            
+		    			}         
+		    		});
+		    		
+		        	RelativeLayout.LayoutParams parameters = new RelativeLayout.LayoutParams( 
+		                    RelativeLayout.LayoutParams.WRAP_CONTENT, 
+		                    RelativeLayout.LayoutParams.WRAP_CONTENT);
+		        	tv.setPadding(5, 5, 5, 5);
+		        	tv.setLineSpacing((float)0, (float)1.5);
+		        	tv.setLayoutParams(parameters);
+		        	
+		        	RelativeLayout.LayoutParams parameters2 = new RelativeLayout.LayoutParams( 
+		                    RelativeLayout.LayoutParams.WRAP_CONTENT, 
+		                    RelativeLayout.LayoutParams.WRAP_CONTENT);
+		        	parameters2.addRule(RelativeLayout.BELOW, tv.getId());
+		        	desc.setPadding(5, 5, 5, 5);
+		        	desc.setLayoutParams(parameters2);
+		        	
+		        	RelativeLayout area = new RelativeLayout(this);
+		        	RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams( 
+		                    RelativeLayout.LayoutParams.FILL_PARENT, 
+		                    RelativeLayout.LayoutParams.WRAP_CONTENT);
+		        	rlp.setMargins(0, 5, 0, 5);
+		        	area.setLayoutParams(rlp);
+		        	
+		        	rlp = new RelativeLayout.LayoutParams( 
+		                    RelativeLayout.LayoutParams.WRAP_CONTENT, 
+		                    RelativeLayout.LayoutParams.WRAP_CONTENT); 
+		        	rlp.addRule(RelativeLayout.RIGHT_OF, tv.getId());
+		        	rlp.addRule(RelativeLayout.ALIGN_RIGHT, tv.getId());
+		    
+		        	area.addView(tv);
+		        	//area.addView(pay, rlp);
+		        	area.addView(desc);
+		        	area.setBackgroundResource(R.layout.box);
+		        	list.addView(area);
+	        	}
 	        }
         }
 	}

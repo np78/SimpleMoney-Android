@@ -44,8 +44,6 @@ public class Invoices extends Activity{
     }
 	
 	private Drawable grabImageFromUrl(String url) throws Exception {
-		if(url.equals(""))
-			url = "http://severe-leaf-6733.herokuapp.com/images/small/missing.png";
 	    return Drawable.createFromStream((InputStream)new URL("http://severe-leaf-6733.herokuapp.com" + url).getContent(), "src");
 	}
 	
