@@ -10,7 +10,7 @@ public class QuickPay extends Activity{
 	private int user_id;
 	
 	public void onCreate(Bundle savedInstanceState) {
-		user_id = getIntent().getExtras().getInt("User_ID");
+		user_id = Global.user_id;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.quick_pay);
         //Intent intent = new Intent("com.google.zxing.client.android.SCAN"); 
@@ -21,7 +21,6 @@ public class QuickPay extends Activity{
 	public void goToRootView(View view)
 	{
 		Intent myIntent = new Intent(getApplicationContext(), Root.class);
-		myIntent.putExtra("User_ID", user_id);
 	    startActivity(myIntent);
 	} 
 	 

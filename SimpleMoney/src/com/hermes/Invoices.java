@@ -37,11 +37,35 @@ public class Invoices extends Activity{
 	//private LinkedList<TextView> entries = new LinkedList<TextView>();
 	
 	public void onCreate(Bundle savedInstanceState) {
-		user_id = getIntent().getExtras().getInt("User_ID");
+		user_id = Global.user_id;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.invoices);
+        user = getUserData();
 		updateView(null);
     }
+	
+	public User getUserData()
+	{
+		try
+		{
+			URI uri = new URI("http://severe-leaf-6733.herokuapp.com/users/" + user_id);
+			HttpClient client = new DefaultHttpClient();
+			HttpGet get = new HttpGet(uri);
+			
+			get.setHeader("Accept", "application/json");
+			get.setHeader("Content-type", "application/json");
+			BasicResponseHandler responseHandler = new BasicResponseHandler();
+			String responseString = client.execute(get, responseHandler);
+			
+			GsonBuilder g = new GsonBuilder();
+			g.setDateFormat("E MMM d HH:mm:ss Z y");
+			Gson gson = g.create();
+			User um = gson.fromJson(responseString, User.class);
+			return um;
+		}
+		catch (Exception e) {}
+		return null;
+	}
 	
 	private Drawable grabImageFromUrl(String url) throws Exception {
 	    return Drawable.createFromStream((InputStream)new URL("http://severe-leaf-6733.herokuapp.com" + url).getContent(), "src");
@@ -71,10 +95,28 @@ public class Invoices extends Activity{
 	        	TextView tv = new TextView(this);
 	        	tv.setId(trans.getID());
 	        	try {
-	    			//tv.setCompoundDrawables(grabImageFromUrl(trans.getSender().getAvatarURLSmall()), null, null, null);
+	    			tv.setCompoundDrawables(grabImageFromUrl(trans.getSender().getAvatarURLSmall()), null, null, null);
 	    		} catch (Exception e) {}
+	        	//tv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.qr_marker, 0, 0, 0);
 	        	tv.append(" " + trans.getSenderEmail() + "   (" + trans.getSenderEmail() + ")\n");
 	        	String date = trans.getCreateDate();
+	        	/*int hours = date.getHours();
+	        	String timezone = "AM";
+	        	int min = date.getMinutes();
+	        	int sec = date.getSeconds();
+	        	String minutes = "" + min;
+	        	String seconds = "" + sec;
+	        	if(hours > 12)
+	        	{
+	        		hours -= 12;
+	        		timezone = "PM";
+	        	}
+	        	if(min < 10)
+	        		minutes = "0" + minutes;
+	        	if(sec < 10)
+	        		seconds = "0" + seconds;
+	    		tv.append(" " + date.getMonth() + " " + date.getDay() + ", " + date.getYear() + " " +
+	    				 hours + ":" + minutes + ":" + seconds + timezone + "\n");*/
 	        	tv.append(" " + trans.getCreateDate() + "\n");
 	    		tv.append(" " + "Amount: " + trans.getAmount());
 	    		
@@ -89,20 +131,6 @@ public class Invoices extends Activity{
 	    				pay(v);            
 	    			}         
 	    		});
-	    		
-	        	RelativeLayout.LayoutParams parameters = new RelativeLayout.LayoutParams( 
-	                    RelativeLayout.LayoutParams.WRAP_CONTENT, 
-	                    RelativeLayout.LayoutParams.WRAP_CONTENT);
-	        	tv.setPadding(5, 5, 5, 5);
-	        	tv.setLineSpacing((float)0, (float)1.5);
-	        	tv.setLayoutParams(parameters);
-	        	
-	        	RelativeLayout.LayoutParams parameters2 = new RelativeLayout.LayoutParams( 
-	                    RelativeLayout.LayoutParams.WRAP_CONTENT, 
-	                    RelativeLayout.LayoutParams.WRAP_CONTENT);
-	        	parameters2.addRule(RelativeLayout.BELOW, tv.getId());
-	        	desc.setPadding(5, 5, 5, 5);
-	        	desc.setLayoutParams(parameters2);
 	        	
 	        	RelativeLayout area = new RelativeLayout(this);
 	        	RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams( 
@@ -111,14 +139,29 @@ public class Invoices extends Activity{
 	        	rlp.setMargins(0, 5, 0, 5);
 	        	area.setLayoutParams(rlp);
 	        	
+	        	RelativeLayout.LayoutParams parameters = new RelativeLayout.LayoutParams( 
+	                    RelativeLayout.LayoutParams.WRAP_CONTENT, 
+	                    RelativeLayout.LayoutParams.WRAP_CONTENT);
+	        	tv.setPadding(5, 5, 5, 5);
+	        	tv.setLineSpacing((float)0, (float)1.5);
+	        	tv.setLayoutParams(parameters);
+	        	
 	        	rlp = new RelativeLayout.LayoutParams( 
 	                    RelativeLayout.LayoutParams.WRAP_CONTENT, 
 	                    RelativeLayout.LayoutParams.WRAP_CONTENT); 
 	        	rlp.addRule(RelativeLayout.RIGHT_OF, tv.getId());
 	        	rlp.addRule(RelativeLayout.ALIGN_RIGHT, tv.getId());
+	        	pay.setLayoutParams(rlp);
+	        	
+	        	RelativeLayout.LayoutParams parameters2 = new RelativeLayout.LayoutParams( 
+	                    RelativeLayout.LayoutParams.WRAP_CONTENT, 
+	                    RelativeLayout.LayoutParams.WRAP_CONTENT);
+	        	parameters2.addRule(RelativeLayout.BELOW, tv.getId());
+	        	desc.setPadding(5, 5, 5, 5);
+	        	desc.setLayoutParams(parameters2);
 	    
 	        	area.addView(tv);
-	        	//area.addView(pay, rlp);
+	        	area.addView(pay);
 	        	area.addView(desc);
 	        	area.setBackgroundResource(R.layout.box);
 	        	list.addView(area);
@@ -135,7 +178,13 @@ public class Invoices extends Activity{
         title.setText("Paid Invoices");
         title.setTextSize(20);
         list.addView(title);
-        if(paidInvoices.length == 0)
+        boolean any = false;
+        for(int i = 0; i < paidInvoices.length; i++)
+        {
+        	if(paidInvoices[i].getComplete())
+        		any = true;
+        }
+        if(!any)
         {
         	TextView none = new TextView(this);
             none.setText("None");
@@ -147,60 +196,63 @@ public class Invoices extends Activity{
 	        {
 	        	Transaction trans = paidInvoices[i];
 	        	
-	        	TextView tv = new TextView(this);
-	        	tv.setId(trans.getID());
-	        	try {
-	    			//tv.setCompoundDrawables(grabImageFromUrl(trans.getSender().getAvatarURLSmall()), null, null, null);
-	    		} catch (Exception e) {}
-	        	tv.append(" " + trans.getSenderEmail() + "   (" + trans.getSenderEmail() + ")\n");
-	        	String date = trans.getCreateDate();
-	        	tv.append(" " + trans.getCreateDate() + "\n");
-	    		tv.append(" " + "Amount: " + trans.getAmount());
-	    		
-	    		TextView desc = new TextView(this);
-	    		desc.setText(" " + trans.getDescription());
-	    		
-	    		Button pay = new Button(this);
-	    		pay.setText("Pay");
-	    		pay.setTag(i);
-	    		pay.setOnClickListener(new View.OnClickListener() {             
-	    			public void onClick(View v) {                 
-	    				pay(v);            
-	    			}         
-	    		});
-	    		
-	        	RelativeLayout.LayoutParams parameters = new RelativeLayout.LayoutParams( 
-	                    RelativeLayout.LayoutParams.WRAP_CONTENT, 
-	                    RelativeLayout.LayoutParams.WRAP_CONTENT);
-	        	tv.setPadding(5, 5, 5, 5);
-	        	tv.setLineSpacing((float)0, (float)1.5);
-	        	tv.setLayoutParams(parameters);
-	        	
-	        	RelativeLayout.LayoutParams parameters2 = new RelativeLayout.LayoutParams( 
-	                    RelativeLayout.LayoutParams.WRAP_CONTENT, 
-	                    RelativeLayout.LayoutParams.WRAP_CONTENT);
-	        	parameters2.addRule(RelativeLayout.BELOW, tv.getId());
-	        	desc.setPadding(5, 5, 5, 5);
-	        	desc.setLayoutParams(parameters2);
-	        	
-	        	RelativeLayout area = new RelativeLayout(this);
-	        	RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams( 
-	                    RelativeLayout.LayoutParams.FILL_PARENT, 
-	                    RelativeLayout.LayoutParams.WRAP_CONTENT);
-	        	rlp.setMargins(0, 5, 0, 5);
-	        	area.setLayoutParams(rlp);
-	        	
-	        	rlp = new RelativeLayout.LayoutParams( 
-	                    RelativeLayout.LayoutParams.WRAP_CONTENT, 
-	                    RelativeLayout.LayoutParams.WRAP_CONTENT); 
-	        	rlp.addRule(RelativeLayout.RIGHT_OF, tv.getId());
-	        	rlp.addRule(RelativeLayout.ALIGN_RIGHT, tv.getId());
-	    
-	        	area.addView(tv);
-	        	//area.addView(pay, rlp);
-	        	area.addView(desc);
-	        	area.setBackgroundResource(R.layout.box);
-	        	list.addView(area);
+	        	if(trans.getComplete())
+	        	{
+		        	TextView tv = new TextView(this);
+		        	tv.setId(trans.getID());
+		        	try {
+		    			//tv.setCompoundDrawables(grabImageFromUrl(trans.getSender().getAvatarURLSmall()), null, null, null);
+		    		} catch (Exception e) {}
+		        	tv.append(" " + trans.getSenderEmail() + "   (" + trans.getSenderEmail() + ")\n");
+		        	String date = trans.getCreateDate();
+		        	tv.append(" " + trans.getCreateDate() + "\n");
+		    		tv.append(" " + "Amount: " + trans.getAmount());
+		    		
+		    		TextView desc = new TextView(this);
+		    		desc.setText(" " + trans.getDescription());
+		    		
+		    		Button pay = new Button(this);
+		    		pay.setText("Pay");
+		    		pay.setTag(i);
+		    		pay.setOnClickListener(new View.OnClickListener() {             
+		    			public void onClick(View v) {                 
+		    				pay(v);            
+		    			}         
+		    		});
+		    		
+		        	RelativeLayout.LayoutParams parameters = new RelativeLayout.LayoutParams( 
+		                    RelativeLayout.LayoutParams.WRAP_CONTENT, 
+		                    RelativeLayout.LayoutParams.WRAP_CONTENT);
+		        	tv.setPadding(5, 5, 5, 5);
+		        	tv.setLineSpacing((float)0, (float)1.5);
+		        	tv.setLayoutParams(parameters);
+		        	
+		        	RelativeLayout.LayoutParams parameters2 = new RelativeLayout.LayoutParams( 
+		                    RelativeLayout.LayoutParams.WRAP_CONTENT, 
+		                    RelativeLayout.LayoutParams.WRAP_CONTENT);
+		        	parameters2.addRule(RelativeLayout.BELOW, tv.getId());
+		        	desc.setPadding(5, 5, 5, 5);
+		        	desc.setLayoutParams(parameters2);
+		        	
+		        	RelativeLayout area = new RelativeLayout(this);
+		        	RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams( 
+		                    RelativeLayout.LayoutParams.FILL_PARENT, 
+		                    RelativeLayout.LayoutParams.WRAP_CONTENT);
+		        	rlp.setMargins(0, 5, 0, 5);
+		        	area.setLayoutParams(rlp);
+		        	
+		        	rlp = new RelativeLayout.LayoutParams( 
+		                    RelativeLayout.LayoutParams.WRAP_CONTENT, 
+		                    RelativeLayout.LayoutParams.WRAP_CONTENT); 
+		        	rlp.addRule(RelativeLayout.RIGHT_OF, tv.getId());
+		        	rlp.addRule(RelativeLayout.ALIGN_RIGHT, tv.getId());
+		    
+		        	area.addView(tv);
+		        	//area.addView(pay, rlp);
+		        	area.addView(desc);
+		        	area.setBackgroundResource(R.layout.box);
+		        	list.addView(area);
+	        	}
 	        }
         }
 	}
@@ -211,7 +263,7 @@ public class Invoices extends Activity{
     	{
 			//Get paid invoices
     		URI uri = new URI("http://severe-leaf-6733.herokuapp.com/users/" + user_id + "/invoices");
-    		HttpClient client = new DefaultHttpClient();
+    		DefaultHttpClient client = Global.client;
     		HttpGet get = new HttpGet(uri);
     		get.setHeader("Accept", "application/json");
     		get.setHeader("Content-type", "application/json");
@@ -225,7 +277,6 @@ public class Invoices extends Activity{
     		
     		//Get unpaid invoices
     		uri = new URI("http://severe-leaf-6733.herokuapp.com/users/" + user_id + "/unpaidinvoices");
-    		client = new DefaultHttpClient();
     		get = new HttpGet(uri);
     		get.setHeader("Accept", "application/json");
     		get.setHeader("Content-type", "application/json");
@@ -236,13 +287,12 @@ public class Invoices extends Activity{
     		g.setDateFormat("E MMM d HH:mm:ss Z y");
     		gson = g.create();
     		unpaidInvoices = gson.fromJson(responseString, Transaction[].class);
-    		
-    		getUnpaidInvoices();
-            getPaidInvoices();
-    	}
-    	catch (Exception e){
+    	}	
+		catch (Exception e){
     		Log.e("eX",e.getMessage());
     	}
+    	getUnpaidInvoices();
+        getPaidInvoices();
 	}
 	
 	public void pay(View view)
@@ -279,7 +329,6 @@ public class Invoices extends Activity{
 	public void goToRootView(View view)
 	{
 		Intent myIntent = new Intent(getApplicationContext(), Root.class);
-		myIntent.putExtra("User_ID", user_id);
 	    startActivity(myIntent);
 	}
 }

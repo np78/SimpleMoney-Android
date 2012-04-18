@@ -34,7 +34,6 @@ import android.widget.Toast;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
-//Add user balance to header
 public class Bills extends Activity{
 	
 	private int user_id;
@@ -43,7 +42,7 @@ public class Bills extends Activity{
 	//private LinkedList<TextView> entries = new LinkedList<TextView>();
 	
 	public void onCreate(Bundle savedInstanceState) {
-		user_id = getIntent().getExtras().getInt("User_ID");
+		user_id = Global.user_id;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bills);
         user = getUserData();
@@ -269,7 +268,7 @@ public class Bills extends Activity{
     	{
 			//Get paid bills
     		URI uri = new URI("http://severe-leaf-6733.herokuapp.com/users/" + user_id + "/bills");
-    		HttpClient client = new DefaultHttpClient();
+    		DefaultHttpClient client = Global.client;
     		HttpGet get = new HttpGet(uri);
     		get.setHeader("Accept", "application/json");
     		get.setHeader("Content-type", "application/json");
@@ -283,7 +282,6 @@ public class Bills extends Activity{
     		
     		//Get unpaidBills
     		uri = new URI("http://severe-leaf-6733.herokuapp.com/users/" + user_id + "/unpaidbills");
-    		client = new DefaultHttpClient();
     		get = new HttpGet(uri);
     		get.setHeader("Accept", "application/json");
     		get.setHeader("Content-type", "application/json");
@@ -294,13 +292,12 @@ public class Bills extends Activity{
     		g.setDateFormat("E MMM d HH:mm:ss Z y");
     		gson = g.create();
     		unpaidBills = gson.fromJson(responseString, Transaction[].class);
-    		
-    		getUnpaidBills();
-            getPaidBills();
     	}
     	catch (Exception e){
     		Log.e("eX",e.getMessage());
     	}
+		getUnpaidBills();
+        getPaidBills();
 	}
 	
 	public void pay(View view)
@@ -336,7 +333,6 @@ public class Bills extends Activity{
 	public void goToRootView(View view)
 	{
 		Intent myIntent = new Intent(getApplicationContext(), Root.class);
-		myIntent.putExtra("User_ID", user_id);
 	    startActivity(myIntent);
 	}
 }

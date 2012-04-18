@@ -44,7 +44,7 @@ public class Root extends Activity{
 	private User user;
 	
 	public void onCreate(Bundle savedInstanceState) {
-		user_id = getIntent().getExtras().getInt("User_ID");
+		user_id = Global.user_id;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.root);
         
@@ -130,21 +130,18 @@ public class Root extends Activity{
 	public void goToSendMoneyView(View view)
 	{
 		Intent myIntent = new Intent(view.getContext(), SendMoney.class);
-		myIntent.putExtra("User_ID", user_id);
         startActivityForResult(myIntent, 0);
 	}
 	
 	public void goToQuickPayView(View view)
 	{
 		Intent myIntent = new Intent(view.getContext(), QuickPay.class);
-		myIntent.putExtra("User_ID", user_id);
         startActivityForResult(myIntent, 0);
 	}
 	
 	public void goToRequestMoneyView(View view)
 	{
 		Intent myIntent = new Intent(view.getContext(), RequestMoney.class);
-		myIntent.putExtra("User_ID", user_id);
 		startActivityForResult(myIntent, 0);
 	}
 	
@@ -183,14 +180,12 @@ public class Root extends Activity{
 	public void goToPendingTransactionsView(View view)
 	{
 		Intent myIntent = new Intent(view.getContext(), PendingTransactions.class);
-		myIntent.putExtra("User_ID", user_id);
         startActivityForResult(myIntent, 0);
 	}
 	
 	public void goToLocalAdsView(View view)
 	{
 		Intent myIntent = new Intent(view.getContext(), LocalAds.class);
-		myIntent.putExtra("User_ID", user_id);
         startActivityForResult(myIntent, 0);
 	}
 }

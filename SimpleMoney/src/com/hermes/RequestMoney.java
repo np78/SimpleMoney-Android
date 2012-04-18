@@ -34,7 +34,7 @@ public class RequestMoney extends Activity{
 	private User user;
 	
 	public void onCreate(Bundle savedInstanceState) {
-		user_id = getIntent().getExtras().getInt("User_ID");
+		user_id = Global.user_id;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.request_money);
         user = getUserData();
@@ -59,7 +59,6 @@ public class RequestMoney extends Activity{
 	public void goToRootView(View view)
 	{
 		Intent myIntent = new Intent(getApplicationContext(), Root.class);
-		myIntent.putExtra("User_ID", user_id);
 	    startActivity(myIntent);
 	}
 	
@@ -118,20 +117,17 @@ public class RequestMoney extends Activity{
     		m.put("recipient_email", user.getEmail());
     		m.put("description", description);
     		Double d = new Double(amount);
-    		m.put("amount", "" + d.intValue());
+    		m.put("amount", "" + d.doubleValue());
     		json.put("transaction", m);
-    		Toast.makeText(this, "1", Toast.LENGTH_SHORT).show();
     		
     		StringEntity se = new StringEntity(json.toString());
     		post.setEntity(se);
     		post.setHeader("Accept", "application/json");
     		post.setHeader("Content-type", "application/json");
     		BasicResponseHandler responseHandler = new BasicResponseHandler();
-    		Toast.makeText(this, "2", Toast.LENGTH_SHORT).show();
     		//Fails here
 			//Log.e("Local Context2", Global.localContext.getAttribute(ClientContext.COOKIE_STORE).toString());
     		String responseString = client.execute(post, responseHandler, Global.localContext);
-    		Toast.makeText(this, "3", Toast.LENGTH_SHORT).show();
     		
     		if(responseString != null)
     		{

@@ -33,7 +33,7 @@ public class SendMoney extends Activity{
 	private User user;
 	
 	public void onCreate(Bundle savedInstanceState) {
-		user_id = getIntent().getExtras().getInt("User_ID");
+		user_id = Global.user_id;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.send_money);
         user = getUserData();
@@ -93,7 +93,6 @@ public class SendMoney extends Activity{
 	public void goToRootView(View view)
 	{
 		Intent myIntent = new Intent(getApplicationContext(), Root.class);
-		myIntent.putExtra("User_ID", user_id);
 	    startActivity(myIntent);
 	}
 	
@@ -117,7 +116,7 @@ public class SendMoney extends Activity{
     		m.put("recipient_email", email);
     		m.put("description", description);
     		Double d = new Double(amount);
-    		m.put("amount", "" + d.intValue());
+    		m.put("amount", "" + d.doubleValue());
     		json.put("transaction", m);
     		
     		StringEntity se = new StringEntity(json.toString());

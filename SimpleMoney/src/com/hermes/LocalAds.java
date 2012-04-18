@@ -29,7 +29,7 @@ public class LocalAds extends Activity{//MapActivity{
 	private int user_id;
 	
 	public void onCreate(Bundle savedInstanceState) {
-		user_id = getIntent().getExtras().getInt("User_ID");
+		user_id = Global.user_id;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.local_ads);
         
@@ -40,7 +40,6 @@ public class LocalAds extends Activity{//MapActivity{
 	public void goToRootView(View view)
 	{
 		Intent myIntent = new Intent(getApplicationContext(), Root.class);
-		myIntent.putExtra("User_ID", user_id);
 	    startActivity(myIntent);
 	}
 	

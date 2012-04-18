@@ -2,11 +2,15 @@ package com.hermes;
 
 import java.net.URI;
 
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HttpContext;
 import org.json.JSONObject;
 
 import com.google.gson.Gson;
@@ -94,7 +98,7 @@ public class SignUp extends Activity{
     	try
     	{
     		URI uri = new URI("http://severe-leaf-6733.herokuapp.com/users");
-    		HttpClient client = new DefaultHttpClient();
+    		DefaultHttpClient client = new DefaultHttpClient();
     		HttpPost post = new HttpPost(uri);
     		
     		JSONObject json = new JSONObject();
@@ -118,8 +122,15 @@ public class SignUp extends Activity{
     		
     		if(um.getID() != 0)
     		{
+    			CookieStore cookieStore = client.getCookieStore();
+    			HttpContext localContext = new BasicHttpContext(); 
+    			localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
+    			//Log.e("Local Context1", localContext.getAttribute(ClientContext.COOKIE_STORE).toString());
+    			Global.localContext = localContext;
+    			Global.client = client;
+    			Global.user_id = um.getID();
+    			
             	Intent myIntent = new Intent(getApplicationContext(), Root.class);
-            	myIntent.putExtra("User_ID", um.getID());
                 startActivity(myIntent);
             } else {
             	Toast.makeText(this, "Unable to Sign Up", Toast.LENGTH_LONG).show();               

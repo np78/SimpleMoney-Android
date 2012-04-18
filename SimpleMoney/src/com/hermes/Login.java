@@ -100,9 +100,9 @@ public class Login extends Activity {
     			//Log.e("Local Context1", localContext.getAttribute(ClientContext.COOKIE_STORE).toString());
     			Global.localContext = localContext;
     			Global.client = client;
+    			Global.user_id = um.getID();
     			
             	Intent myIntent = new Intent(getApplicationContext(), Root.class);
-            	myIntent.putExtra("User_ID", um.getID());
                 startActivity(myIntent);
             } else {
             	Toast.makeText(this, "Failed to Login", Toast.LENGTH_LONG).show();               
