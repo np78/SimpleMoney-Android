@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/homeView"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+	<LinearLayout
+		android:id="@+id/center"
+    	android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+    	android:layout_centerInParent="true"
+    	android:orientation="vertical">
+    
+		<TextView
+			android:id="@+id/title"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:layout_centerInParent="true"
+			android:text="SimpleMoney"
+			android:textSize="30sp"/>
+		
+		<TextView
+			android:id="@+id/description"
+			android:layout_below="@id/title"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+			android:text="Send and receive payments for free."/>
+			
+	</LinearLayout>
+
+	<Button 
+		android:id="@+id/register"
+		android:layout_alignParentBottom="true"
+		android:layout_alignLeft="@id/center"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Register"
+		android:onClick="goToSignUpView"/>
+		
+	<Button 
+		android:id="@+id/signIn"
+		android:layout_alignParentBottom="true"
+		android:layout_alignRight="@id/center"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Sign In"
+		android:onClick="goToLoginView"/>
+
+</RelativeLayout>

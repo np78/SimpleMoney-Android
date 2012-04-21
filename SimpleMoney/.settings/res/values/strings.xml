@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">SimpleMoney - Hermes Inc.</string>
+    <string name="sign_up"><u>Sign Up</u></string>
+    <string name="forgot_password"><u>Forgot your password?</u></string>
+    <string name="back_login"><u>Back to Login</u></string>
+    <string name="back"><u>Back</u></string>
+    <string name="logout"><u>Log Out</u></string>
+
+</resources>
