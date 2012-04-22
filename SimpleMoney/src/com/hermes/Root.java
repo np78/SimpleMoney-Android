@@ -23,6 +23,7 @@ import com.google.gson.GsonBuilder;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -47,6 +48,7 @@ public class Root extends Activity{
 		user_id = Global.user_id;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.root);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         
         WindowManager mWinMgr = (WindowManager)getSystemService(Context.WINDOW_SERVICE); 
         width = mWinMgr.getDefaultDisplay().getWidth(); 
@@ -65,8 +67,6 @@ public class Root extends Activity{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-        Log.e("Small", user.getAvatarURLSmall());
-        Log.e("Medium", user.getAvatarURL());
         userData.setBackgroundResource(R.layout.box);
         
         Button pic = (Button) findViewById(R.id.sendMoney);
@@ -142,8 +142,9 @@ public class Root extends Activity{
 	
 	public void goToQuickPayView(View view)
 	{
-		Intent myIntent = new Intent(view.getContext(), QuickPay.class);
-        startActivityForResult(myIntent, 0);
+		Intent intent = new Intent("com.google.zxing.client.android.SCAN");
+		intent.putExtra("SCAN_MODE", "QR_CODE_MODE");
+		startActivityForResult(intent, 0);
 	}
 	
 	public void goToRequestMoneyView(View view)
@@ -194,5 +195,50 @@ public class Root extends Activity{
     	catch (Exception e){
     		Log.e("Logout Error",e.getMessage());
     	}
+	}
+	
+	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+		if (requestCode == 0) {
+		      if (resultCode == RESULT_OK) {
+		    	  String contents = intent.getStringExtra("SCAN_RESULT");
+		    	  String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
+			         
+		          // Handle successful scan
+		          Toast.makeText(this, contents, Toast.LENGTH_LONG).show();
+		          try
+		     	  {
+		     		 URI uri = new URI("http://severe-leaf-6733.herokuapp.com/transactions");
+		     		 HttpClient client = Global.client;
+		     		 HttpPost post = new HttpPost(uri);
+		     		
+		     		 JSONObject json = new JSONObject();
+		     		 JSONObject m = new JSONObject();
+		     		 String email = contents.substring(contents.indexOf('\"')+1, contents.indexOf('\"', contents.indexOf('\"')+1));
+		     		 m.put("recipient_email", email);
+		     		 m.put("complete", false);
+		     		 json.put("transaction", m);
+		     		
+		     		 StringEntity se = new StringEntity(json.toString());
+		     		 post.setEntity(se);
+		     		 post.setHeader("Accept", "application/json");
+		     		 post.setHeader("Content-type", "application/json");
+		     		 BasicResponseHandler responseHandler = new BasicResponseHandler();
+		     		 String responseString = client.execute(post, responseHandler);
+			     		
+			         if(responseString != null)
+			         {
+			     		 Toast.makeText(this, "Scan Complete to:\n" + email, Toast.LENGTH_LONG).show();
+			         } else {
+			             Toast.makeText(this, "Invalid QR", Toast.LENGTH_LONG).show();               
+			         }
+			     }
+			     catch (Exception e){
+			     	Log.e("QR not Recognized",e.getMessage());
+			     }
+			} else if (resultCode == RESULT_CANCELED) {
+			     // Handle cancel
+			     Toast.makeText(this, "Scan Fail", Toast.LENGTH_LONG).show();
+			}
+		}
 	}
 }

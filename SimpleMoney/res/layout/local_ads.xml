@@ -19,6 +19,6 @@
 		android:layout_height="wrap_content"
 		android:layout_below="@id/back"
 		android:layout_centerInParent="true"
-		android:text="Local Ads" />
+		android:text="Local Deals: Coming Soon" />
 	
 </RelativeLayout>

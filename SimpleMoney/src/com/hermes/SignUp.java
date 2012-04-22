@@ -1,11 +1,12 @@
 package com.hermes;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
 
 import org.apache.http.client.CookieStore;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.entity.StringEntity;
@@ -21,17 +22,24 @@ import com.google.gson.GsonBuilder;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,10 +47,23 @@ public class SignUp extends Activity{
 	
 	private int width, height;	
 	public User user;
+	//YOU CAN EDIT THIS TO WHATEVER YOU WANT
+    private static final int SELECT_PICTURE = 1;
+
+    private String selectedImagePath;
+    //ADDED
+    private String filemanagerstring;
+    
+	protected ImageView _image;
+	protected String _path;
+	protected boolean _taken;
+	
+	protected static final String PHOTO_TAKEN	= "photo_taken";
 	
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sign_up);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
        
         WindowManager mWinMgr = (WindowManager)getSystemService(Context.WINDOW_SERVICE); 
         width = mWinMgr.getDefaultDisplay().getWidth(); 
@@ -76,6 +97,10 @@ public class SignUp extends Activity{
     	photo.getLayoutParams().height = (int)(height/5.7);
     	photo.getLayoutParams().width = (int)(height/5.7);
     	photo.setImageDrawable(getImage("/images/medium/missing.png"));
+        
+    	_image = photo;
+    	//Path doesn't seem to do anything
+        _path = Environment.getExternalStorageDirectory() + "/res/drawable/avatar.jpg";
     }
     
     public static Drawable getImage(String url)
@@ -101,12 +126,23 @@ public class SignUp extends Activity{
     
     public void getPhotoFromPhone(View view)
     {
-    	//Use camera to take picture as avatar
+    	Log.i("MakeMachine", "startCameraActivity()" );
+    	File file = new File( _path );
+    	Uri outputFileUri = Uri.fromFile( file );
+    	
+    	Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE );
+    	intent.putExtra( MediaStore.EXTRA_OUTPUT, outputFileUri );
+    	
+    	startActivityForResult( intent, 0 );
     }
     
     public void getPhotoFromLibrary(View view)
     {
-    	//Use a photo saved on phone
+    	Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent,
+                "Select Picture"), SELECT_PICTURE);
     }
     
     public void signUp(View view)
@@ -125,6 +161,19 @@ public class SignUp extends Activity{
     		
     		JSONObject json = new JSONObject();
     		JSONObject m = new JSONObject();
+    		
+    		File f = null;
+    		if(selectedImagePath != null && !selectedImagePath.equals(""))
+    			f = new File(selectedImagePath);
+    		else if (_path != null && !_path.equals(""))
+    			f = new File(_path);
+    		if(f != null)
+    		{
+    			byte[] bytes = new byte[(int) f.length()];
+    			FileInputStream stream = new FileInputStream(f);
+    			stream.read(bytes);
+    			m.put("avatar", bytes);
+    		}
     		m.put("name", name);
     		m.put("email", username);
     		m.put("password", password);
@@ -161,5 +210,86 @@ public class SignUp extends Activity{
     	catch (Exception e){
     		Log.e("Sign Up Error",e.getMessage());
     	}
+    }
+    
+  //UPDATED
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == SELECT_PICTURE) {
+                Uri selectedImageUri = data.getData();
+
+                //OI FILE Manager
+                filemanagerstring = selectedImageUri.getPath();
+
+                //MEDIA GALLERY
+                selectedImagePath = getPath(selectedImageUri);
+
+                //DEBUG PURPOSE - you can delete this if you want
+                if(selectedImagePath!=null)
+                    System.out.println(selectedImagePath);
+                else System.out.println("selectedImagePath is null");
+                if(filemanagerstring!=null)
+                    System.out.println(filemanagerstring);
+                else System.out.println("filemanagerstring is null");
+
+                //NOW WE HAVE OUR WANTED STRING
+                if(selectedImagePath!=null)
+                    System.out.println("selectedImagePath is the right one for you!");
+                else
+                    System.out.println("filemanagerstring is the right one for you!");
+            }
+        }
+        
+        switch( resultCode )
+    	{
+    		case 0:
+    			Log.i( "MakeMachine", "User cancelled" );
+    			break;
+    			
+    		case -1:
+    			onPhotoTaken();
+    			break;
+    	}
+    }
+
+    //UPDATED!
+    public String getPath(Uri uri) {
+        String[] projection = { MediaStore.Images.Media.DATA };
+        Cursor cursor = managedQuery(uri, projection, null, null, null);
+        if(cursor!=null)
+        {
+            //HERE YOU WILL GET A NULLPOINTER IF CURSOR IS NULL
+            //THIS CAN BE, IF YOU USED OI FILE MANAGER FOR PICKING THE MEDIA
+            int column_index = cursor
+            .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        }
+        else return null;
+    }
+    
+    protected void onPhotoTaken()
+    {
+    	Log.i( "MakeMachine", "onPhotoTaken" );
+    	
+    	_taken = true;
+    	
+    	BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 4;
+    	
+    	Bitmap bitmap = BitmapFactory.decodeFile( _path, options );
+    	
+    	_image.setImageBitmap(bitmap);
+    }
+    
+    protected void onRestoreInstanceState( Bundle savedInstanceState){
+    	Log.i( "MakeMachine", "onRestoreInstanceState()");
+    	if( savedInstanceState.getBoolean( SignUp.PHOTO_TAKEN ) ) {
+    		onPhotoTaken();
+    	}
+    }
+    
+    protected void onSaveInstanceState( Bundle outState ) {
+    	outState.putBoolean( SignUp.PHOTO_TAKEN, _taken );
     }
 }
