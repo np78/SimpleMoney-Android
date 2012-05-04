@@ -6,7 +6,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-
+ 
 /*
  * <application
         android:icon="@drawable/ic_launcher"
@@ -24,6 +24,8 @@ import android.view.View;
         android:enabled="true"
         android:apiKey="0CBS-8-bfi7olOGAdu_kE9OSZ3c5xQLlOIGKqPg" />
  */
+
+//Not working, supposed to display Google Map
 public class LocalAds extends Activity{//MapActivity{
 	
 	private int user_id;

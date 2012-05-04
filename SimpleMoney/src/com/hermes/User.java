@@ -1,5 +1,7 @@
 package com.hermes;
 
+//User model used to read GSON data into object
+//Only had getter methods
 public class User {
 	private int id;
 	private String avatar_url;
@@ -39,6 +41,7 @@ public class User {
 		return email;
 	}
 	
+	//Formats the balance string
 	public String getBalance()
 	{
 		if(balance%100 < 10)

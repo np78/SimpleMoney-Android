@@ -4,14 +4,13 @@
     android:layout_height="fill_parent"
     android:orientation="vertical">
     
-    <TextView
+    <Button
 		android:id="@+id/back"
 		android:clickable="true"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/scroll"
         android:text="@string/back"
-		android:textColorLink="#FFFFFF"
 		android:onClick="goToRootView"/>
 		
 	<TextView 

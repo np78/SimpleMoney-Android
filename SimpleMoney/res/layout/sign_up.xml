@@ -11,8 +11,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_centerInParent="true"
+        android:layout_marginBottom="15px"
 		android:text="Create Your Account"
+		android:textColor="#FFFFFF"
 		android:textSize="24sp"/>
 		
 	<ImageView
@@ -48,6 +49,7 @@
 		android:layout_below="@id/getLibrary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="#FFFFFF"
 		android:text="Name"/>
 		
 	<EditText
@@ -55,28 +57,30 @@
         android:layout_below="@id/nameText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:maxLines="1"/>
+        android:singleLine="true"/>
 
 	<TextView
 		android:id="@+id/emailText"
 		android:layout_below="@id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-		android:text="E-mail"/>
+        android:textColor="#FFFFFF"
+		android:text="E-mail Address"/>
 
 	<EditText
         android:id="@+id/email"
         android:layout_below="@id/emailText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:maxLines="1"/>
+        android:singleLine="true"/>
         
     <TextView
 		android:id="@+id/passwordText"
 		android:layout_below="@id/email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-		android:text="Password"/>
+        android:textColor="#FFFFFF"
+		android:text="Password (6 characters minimum)"/>
 
 	<EditText
         android:id="@+id/password"
@@ -84,7 +88,7 @@
         android:password="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:maxLines="1"/>
+        android:singleLine="true"/>
 		
 	<Button 
 		android:id="@+id/ok"
@@ -93,7 +97,10 @@
 		android:gravity="center"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:layout_marginRight="15px"
 		android:text="Sign Up"
+		android:textSize="20sp"
+		android:textColor="#00FF00"
 		android:onClick="signUp"/>
 		
 	<Button
@@ -103,7 +110,10 @@
 		android:gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="15px"
         android:text="Cancel"
+        android:textSize="20sp"
+        android:textColor="#FFFFFF"
 		android:onClick="goToHomeView"/>
 
 </RelativeLayout>

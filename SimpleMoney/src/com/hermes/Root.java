@@ -1,7 +1,6 @@
 package com.hermes;
 
 import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 
@@ -13,8 +12,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.protocol.HTTP;
 import org.json.JSONObject;
 
 import com.google.gson.Gson;
@@ -24,12 +21,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -48,53 +42,48 @@ public class Root extends Activity{
 		user_id = Global.user_id;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.root);
+        //Forces screen to be portrait
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         
+        //Gets width and height of phone, not used though
         WindowManager mWinMgr = (WindowManager)getSystemService(Context.WINDOW_SERVICE); 
         width = mWinMgr.getDefaultDisplay().getWidth(); 
         height = mWinMgr.getDefaultDisplay().getHeight();
         
-        width = (int)(width/7.5);
-        height = (int)(height/12.5);
+        //Creates blackground for widgets
         PorterDuffColorFilter filter = new PorterDuffColorFilter(Color.parseColor("#000000"), PorterDuff.Mode.SRC_ATOP); 
         
+        //Gets user data and sets top row with user avatar, name, email, and balance
         user = getUserData();
         TextView userData = (TextView) findViewById(R.id.userData);
         userData.setText(" " + user.getName() + "   (" + user.getEmail() + ")\n");
         userData.append(" Balance: " + user.getBalance());
-        try {
-        	userData.setCompoundDrawablesWithIntrinsicBounds(getImage(user.getAvatarURL()), null, null, null);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+        userData.setCompoundDrawablesWithIntrinsicBounds(getImage(user.getAvatarURL()), null, null, null);
         userData.setBackgroundResource(R.layout.box);
         
+        //Applies black background to "Send Money" button
         Button pic = (Button) findViewById(R.id.sendMoney);
         pic.getBackground().setColorFilter(filter);
-        //pic.setMaxWidth((int)(width/1.5));
-    	//pic.setMaxHeight((int)(height/12.5));
     	
+        //Applies black background to "Transactions" button
     	pic = (Button) findViewById(R.id.pendingTransactions);
         pic.getBackground().setColorFilter(filter);
-        //pic.setMaxWidth((int)(width/1.5));
-    	//pic.setMaxHeight((int)(height/12.5));
         
+        //Applies black background to "Send Money" button
         pic = (Button) findViewById(R.id.quickPay);
         pic.getBackground().setColorFilter(filter);
         
+        //Applies black background to "Request Money" button
     	pic = (Button) findViewById(R.id.requestMoney);
         pic.getBackground().setColorFilter(filter);
-        //pic.setMaxWidth((int)(width/1.5));
-    	//pic.setMaxHeight((int)(height/12.5));
         
+        //Applies black background to "Local Deals" button
     	pic = (Button) findViewById(R.id.localAds);
         pic.getBackground().setColorFilter(filter);
-        //pic.setMaxWidth((int)(width/1.5));
-    	//pic.setMaxHeight((int)(height/12.5));
     }
 	
-
-	public static Drawable getImage(String url)
+	//Retrieves a photo at the specified user path
+	public Drawable getImage(String url)
 	{
 		try
 		{
@@ -102,13 +91,15 @@ public class Root extends Activity{
 				url = "http://severe-leaf-6733.herokuapp.com" + url;
 		    return Drawable.createFromStream((InputStream)new URL(url).getContent(), "src");
 		}
+		//If an error occurs, a notice is displayed for user and "None" photo from
+		//Drawable folder is used instead.
 	    catch (Exception e) {
-			e.printStackTrace();
+	    	Log.e("Root", "Null Image Error");
+	    	return getResources().getDrawable( R.drawable.none );
 		}
-		Log.e("Get Image Error", "Null Error");
-		return null;
 	}
 	
+	//Gets user data from server returns a user object to caller
 	public User getUserData()
 	{
 		try
@@ -128,8 +119,13 @@ public class Root extends Activity{
 			User um = gson.fromJson(responseString, User.class);
 			return um;
 		}
+		//Displays error messages and go to Home view
 		catch (Exception e) {
-			Log.e("Unable to retrieve User data",e.getMessage());
+			Log.e("Root", "Unable to retrieve User data");
+			Toast.makeText(this, "Unable to Retrieve Data", Toast.LENGTH_LONG).show(); 
+			Toast.makeText(this, "Please Try Again Later", Toast.LENGTH_LONG).show(); 
+			Intent myIntent = new Intent(getApplicationContext(), Home.class);
+    		startActivityForResult(myIntent, 0);
 		}
 		return null;
 	}
@@ -140,11 +136,14 @@ public class Root extends Activity{
         startActivityForResult(myIntent, 0);
 	}
 	
+	//Goes to a QR scanner
+	//Was working before but I'm not sure what I changed to bresk it
 	public void goToQuickPayView(View view)
 	{
-		Intent intent = new Intent("com.google.zxing.client.android.SCAN");
+		Toast.makeText(this, "QuickPay is under maintenance", Toast.LENGTH_LONG).show();
+		/*Intent intent = new Intent("com.google.zxing.client.android.SCAN");
 		intent.putExtra("SCAN_MODE", "QR_CODE_MODE");
-		startActivityForResult(intent, 0);
+		startActivityForResult(intent, 0);*/
 	}
 	
 	public void goToRequestMoneyView(View view)
@@ -169,7 +168,8 @@ public class Root extends Activity{
 	{
 		//Terminate session
 		try
-    	{URI uri = new URI("http://severe-leaf-6733.herokuapp.com/users/sign_out");
+    	{
+			URI uri = new URI("http://severe-leaf-6733.herokuapp.com/users/sign_out");
     		HttpClient client = new DefaultHttpClient();
     		HttpDelete delete = new HttpDelete(uri);
     		JSONObject json = new JSONObject();
@@ -193,17 +193,22 @@ public class Root extends Activity{
             }
     	}
     	catch (Exception e){
-    		Log.e("Logout Error",e.getMessage());
+    		Toast.makeText(this, "Unable to Logout", Toast.LENGTH_LONG).show();  
+    		Toast.makeText(this, "Please Try Again Later", Toast.LENGTH_LONG).show();  
+    		Log.e("Root", "Unable to logout");
     	}
 	}
 	
+	//Handles users interaction with QR reader
+	//Haven't tested yet
 	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		if (requestCode == 0) {
 		      if (resultCode == RESULT_OK) {
 		    	  String contents = intent.getStringExtra("SCAN_RESULT");
 		    	  String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
 			         
-		          // Handle successful scan
+		          //Handle successful scan
+		    	  //Not test
 		          Toast.makeText(this, contents, Toast.LENGTH_LONG).show();
 		          try
 		     	  {
@@ -213,6 +218,7 @@ public class Root extends Activity{
 		     		
 		     		 JSONObject json = new JSONObject();
 		     		 JSONObject m = new JSONObject();
+		     		 //Complicated string parser that gets email from QR contents
 		     		 String email = contents.substring(contents.indexOf('\"')+1, contents.indexOf('\"', contents.indexOf('\"')+1));
 		     		 m.put("recipient_email", email);
 		     		 m.put("complete", false);
@@ -223,9 +229,9 @@ public class Root extends Activity{
 		     		 post.setHeader("Accept", "application/json");
 		     		 post.setHeader("Content-type", "application/json");
 		     		 BasicResponseHandler responseHandler = new BasicResponseHandler();
-		     		 String responseString = client.execute(post, responseHandler);
+		     		 HttpResponse responseString = client.execute(post, Global.localContext);
 			     		
-			         if(responseString != null)
+			         if(responseString.getStatusLine().getStatusCode() == 200)
 			         {
 			     		 Toast.makeText(this, "Scan Complete to:\n" + email, Toast.LENGTH_LONG).show();
 			         } else {
@@ -233,9 +239,12 @@ public class Root extends Activity{
 			         }
 			     }
 			     catch (Exception e){
-			     	Log.e("QR not Recognized",e.getMessage());
+			    	 Toast.makeText(this, "QR not Recognized", Toast.LENGTH_LONG).show(); 
+			     	 Log.e("Root", "QR not Recognized");
 			     }
-			} else if (resultCode == RESULT_CANCELED) {
+			}
+		    //Is unwantingly invoked when user pressed back button on phone to go to root menu
+		    else if (resultCode == RESULT_CANCELED) {
 			     // Handle cancel
 			     Toast.makeText(this, "Scan Fail", Toast.LENGTH_LONG).show();
 			}

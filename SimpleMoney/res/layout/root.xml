@@ -5,7 +5,7 @@
     android:orientation="vertical" 
     android:gravity="center">
     
-    <LinearLayout
+    <RelativeLayout
     	android:id="@+id/topRow"
     	android:layout_width="fill_parent"
         android:layout_height="wrap_content">
@@ -15,34 +15,38 @@
         	android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
         	android:layout_gravity="left"
+        	android:layout_marginTop="10px"
         	android:text="Sign Out"
 			android:onClick="goToLoginView"/>
     
 		<TextView 
 			android:id="@+id/title"
-			android:layout_width="fill_parent"
+			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_gravity="center_horizontal"
+			android:gravity="center"
+			android:layout_centerInParent="true"
+			android:layout_marginTop="10px"
+			android:textColor="#FFFFFF"
 			android:text="SimpleMoney" 
 			android:textSize="20sp"/>
 			
-	</LinearLayout>
+	</RelativeLayout>
 
 	<TextView 
 		android:id="@+id/userData"
 		android:lineSpacingMultiplier="1.5"
 		android:textSize="20px"
 		android:padding="10px"
-		android:layout_below="@id/title"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content" 
+		android:textColor="#FFFFFF"
 		android:layout_marginTop="25px"/>
 
 	<TableLayout
 		android:id="@+id/icons"
 		android:layout_height="fill_parent"
 		android:layout_width="wrap_content"
-		android:layout_marginTop="50px">
+		android:layout_marginTop="35px">
 			
 		<TableRow>
 		<Button

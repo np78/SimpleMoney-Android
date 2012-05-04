@@ -1,7 +1,10 @@
 package com.hermes;
 
 import java.util.Date;
+import java.util.StringTokenizer;
 
+//Transaction model used to read GSON data into object
+//Only had getter methods
 public class Transaction {
 	private int id;
 	private String recipient_email;
@@ -55,6 +58,7 @@ public class Transaction {
 		return description;
 	}
 	
+	//Formats the balance string
 	public String getAmount()
 	{
 		if(amount%100 < 10)
@@ -67,13 +71,29 @@ public class Transaction {
 		return complete;
 	}
 	
+	//Formats the date string
 	public String getCreateDate()
 	{
-		return created_at.toString();
+		StringTokenizer st = new StringTokenizer(created_at.toString());
+		String dayOfWeek = st.nextToken();
+		String month = st.nextToken();
+		String day = st.nextToken();
+		String time = st.nextToken();
+		String timezone = st.nextToken();
+		String year = st.nextToken();
+		return month + " " + day + ", " + year + " - " + time;
 	}
 	
+	//Formats the date string
 	public String getUpdateDate()
 	{
-		return updated_at.toString();
+		StringTokenizer st = new StringTokenizer(updated_at.toString());
+		String dayOfWeek = st.nextToken();
+		String month = st.nextToken();
+		String day = st.nextToken();
+		String time = st.nextToken();
+		String timezone = st.nextToken();
+		String year = st.nextToken();
+		return month + " " + day + ", " + year + " - " + time;
 	}
 }

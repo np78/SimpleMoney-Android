@@ -11,7 +11,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_centerInParent="true"
+        android:layout_marginBottom="30px"
+        android:textColor="#FFFFFF"
 		android:text="Sign In to SimpleMoney"
 		android:textSize="24sp"/>
 
@@ -19,22 +20,24 @@
 		android:id="@+id/usernameText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="#FFFFFF"
         android:layout_below="@id/title"
-		android:text="Username"/>
+		android:text="E-mail Address"/>
 
 	<EditText
         android:id="@+id/username"
         android:layout_below="@id/usernameText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:maxLines="1"
-		android:text="np78@nau.edu"/>
+        android:singleLine="true"/>
 		
 	<TextView
 		android:id="@+id/passwordText"
 		android:layout_below="@id/username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20px"
+        android:textColor="#FFFFFF"
 		android:text="Password"/>
 		
 	<EditText
@@ -43,8 +46,7 @@
         android:password="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:maxLines="1"
-		android:text="Maddie1"/>
+        android:singleLine="true"/>
 
 	<Button 
 		android:id="@+id/ok"
@@ -52,7 +54,10 @@
 		android:layout_alignRight="@id/password"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:layout_marginRight="15px"
 		android:text="Sign In"
+		android:textSize="20sp"
+		android:textColor="#00FF00"
 		android:onClick="goToRootView"/>
 		
 	<Button
@@ -61,7 +66,10 @@
 		android:layout_alignLeft="@id/password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="15px"
         android:text="Cancel"
+        android:textSize="20sp"
+        android:textColor="#FFFFFF"
 		android:onClick="goToHomeView"/>
 
 </RelativeLayout>

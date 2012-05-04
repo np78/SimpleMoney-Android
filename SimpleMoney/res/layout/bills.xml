@@ -6,26 +6,31 @@
 
 	<RelativeLayout
 		android:id="@+id/topRow"
-		android:layout_width="wrap_content" 
+		android:layout_width="fill_parent" 
 		android:layout_height="wrap_content"
-		android:gravity="center_horizontal">
+		android:gravity="center">
 		
 		<Button 
 			android:id="@+id/refresh"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="Refresh"
+			android:layout_alignParentLeft="true"
 			android:onClick="updateView"/>
-
+			
 		<TextView
+   			android:id="@+id/balance"
+			android:layout_width="wrap_content"
+       		android:layout_height="wrap_content"
+       		android:layout_centerInParent="true"
+        	android:textColor="#FFFFFF"/>
+
+		<Button
 			android:id="@+id/back"
-			android:clickable="true"
     		android:layout_width="wrap_content"
     		android:layout_height="wrap_content"
     		android:layout_alignParentRight="true"
-    		android:layout_centerVertical="true"
-    		android:text="@string/back"
-			android:textColorLink="#FFFFFF"
+    		android:text="Back"
 			android:onClick="goToRootView"/>
 			
 	</RelativeLayout>
@@ -49,7 +54,6 @@
 				android:id="@+id/lists"
 				android:layout_width="fill_parent" 
 				android:layout_height="wrap_content" 
-				android:onClick="updateView"
 				android:orientation="vertical">
 		
 				<LinearLayout
@@ -64,6 +68,7 @@
 					android:layout_width="fill_parent" 
 					android:layout_height="wrap_content" 
 					android:layout_below="@id/unpaidBills"
+					android:layout_alignLeft="@id/unpaidBills"
 					android:orientation="vertical">
 				</LinearLayout>
 				

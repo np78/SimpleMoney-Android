@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-feature android:name="android.hardware.camera" android:required="false" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
+    <uses-permission android:name="android.permission.READ_CONTACTS"/> 
 
     <application
         android:icon="@drawable/ic_launcher"
@@ -32,7 +33,6 @@
         <activity android:name=".Invoices"></activity>
         <activity android:name=".Bills"></activity> 
         <activity android:name=".LocalAds"></activity> 
-        <activity android:name=".QuickPay"></activity>
         <activity android:name=".RequestMoney"></activity>
         
         <activity 
